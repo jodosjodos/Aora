@@ -1,18 +1,39 @@
-import { View, Text, SafeAreaView, ScrollView, Image } from "react-native";
+import {
+  View,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  Image,
+  Alert,
+} from "react-native";
 import React, { useState } from "react";
 import { images } from "@/constants";
 import FormField from "@/components/FormField";
 import CustomButton from "@/components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { createUser } from "@/lib/appwrite";
 
 const SignUp = () => {
   const [form, setForm] = useState({
-    username:"",
+    username: "",
     email: "",
     password: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submit = () => {};
+  const submit = async () => {
+    if (!form.username || !form.email || !form.password) {
+      Alert.alert("Error", "please fill in all fields");
+    }
+    setIsSubmitting(true);
+    try {
+      const result = await createUser(form.username, form.email, form.password);
+      router.replace("/home")
+    } catch (error: any) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
@@ -23,7 +44,7 @@ const SignUp = () => {
             className="w-[115px] h-[34px]"
           />
           <Text className="text-2xl text-white text-semibold mt-10 font-psemibold">
-            Sign up   to Aora
+            Sign up to Aora
           </Text>
           <FormField
             title="username"
@@ -54,7 +75,12 @@ const SignUp = () => {
             <Text className="text-lg text-gray-100 font-pregular">
               Have an account already?
             </Text>
-            <Link href="/sign-in" className="text-lg font-psemibold text-secondary">Sign in</Link>
+            <Link
+              href="/sign-in"
+              className="text-lg font-psemibold text-secondary"
+            >
+              Sign in
+            </Link>
           </View>
         </View>
       </ScrollView>
