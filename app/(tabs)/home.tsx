@@ -12,25 +12,19 @@ import { images } from "@/constants";
 import SearchInput from "@/components/SearchInput";
 import Trending from "@/components/Trending";
 import EmptyState from "@/components/EmptyState";
-import { getAllPosts } from "@/lib/appwrite";
+import { getAllPosts, getLatestPosts } from "@/lib/appwrite";
 import { Models } from "react-native-appwrite";
 import { useAppwrite } from "@/lib/useAppwrite";
 import VideoCard from "@/components/VideoCard";
-interface postsProps extends Models.Document {
-  video: string;
-  thumbnail: string;
-  title: string;
-  prompt: string;
-}
 const Home = () => {
   const { data: posts, refetch } = useAppwrite({ fn: getAllPosts });
+  const { data: latestPosts } = useAppwrite({ fn: getLatestPosts });
   const [refreshing, setReFreshing] = useState(false);
   const onRefresh = async () => {
     setReFreshing(true);
     await refetch();
     setReFreshing(false);
   };
-  
   return (
     <SafeAreaView className="bg-primary h-full ">
       <FlatList
@@ -65,12 +59,12 @@ const Home = () => {
               value=""
               handleChangeText={() => {}}
             />
-            {/* <View className="w-full flex-1 pt-5 pb-8">
+            <View className="w-full flex-1 pt-5 pb-8">
               <Text className="text-gray-100 text-lg mb-3 font-pregular">
                 Latest Videos
               </Text>
-              <Trending posts={[{ id: 1 }, { id: 2 }, { id: 3 }] ?? []} />
-            </View> */}
+              <Trending posts={latestPosts} />
+            </View>
           </View>
         )}
         ListEmptyComponent={() => (
