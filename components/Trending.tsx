@@ -11,28 +11,29 @@ import {
 import React, { useState } from "react";
 import * as Animatable from "react-native-animatable";
 import { icons } from "@/constants";
-const zoomIn= {
-  0: {
+const zoomIn = {
+  from: {
     scale: 0.8,
   },
-  1: {
+  to: {
     scale: 1,
   },
 };
-const zoomOut=  {
-    0: {
-      scale: 1,
-    },
-    1: {
-      scale: 0.8 
-    },
-  };
+const zoomOut = {
+  from: {
+    scale: 1,
+  },
+  to: {
+    scale: 0.8,
+  },
+};
+
 const TrendingItem = ({ activeItem, item }: { activeItem: any; item: any }) => {
   const [play, setPlay] = useState(false);
   return (
     <Animatable.View
       className="mr-5"
-      animation={activeItem === item.$id ? zoomIn:zoomOut  }
+      animation={activeItem === item.$id ? zoomIn as any: zoomOut as any}
       duration={500}
     >
       {play ? (
@@ -72,7 +73,7 @@ const Trending = ({ posts }: { posts: any }) => {
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}
-      contentOffset={{ x: 170,y:0 }}
+      contentOffset={{ x: 170, y: 0 }}
       horizontal
     />
   );
