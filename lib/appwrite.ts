@@ -4,6 +4,7 @@ import {
   Client,
   Databases,
   ID,
+  Models,
   Query,
 } from "react-native-appwrite";
 
@@ -81,10 +82,22 @@ export const getCurrentUser = async () => {
       config.databaseId,
       config.userCollectionId,
       [Query.equal("accountId", currentAccount.$id)]
-      
     );
-    if(!currentUser) throw new Error("no account found");
+    if (!currentUser) throw new Error("no account found");
     return currentUser.documents;
+  } catch (error: any) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
+export const getAllPosts = async (): Promise<Models.Document[]> => {
+  try {
+    const posts = await databases.listDocuments(
+      config.databaseId,
+      config.videoCollectionId
+    );
+    return posts.documents;
   } catch (error: any) {
     console.log(error);
     throw new Error(error);
